@@ -3,6 +3,7 @@ package com.anfly.a1908a;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.anfly.a1908a.template.CS;
 import com.anfly.a1908a.template.Foodball;
@@ -28,11 +29,21 @@ public class MainActivity extends AppCompatActivity {
 //        Shape shape3 = shapeFactory.getShape(Constants.SQUARE);
 //        shape3.draw();
 
-        Game game = new Foodball();
-        game.play();
+        //模板模式
+//        Game game = new Foodball();
+//        game.play();
+//
+//        game = new CS();
+//        game.play();
 
-        game = new CS();
-        game.play();
+        Computer computerr = new Computer.Builder()
+                .setColor(123)
+                .setName("拯救者")
+                .setPrice(9000)
+                .setOs("windows")
+                .build();
+
+        Log.e("TAG", computerr.toString());
     }
 
 
