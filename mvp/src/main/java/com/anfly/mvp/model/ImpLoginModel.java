@@ -1,8 +1,12 @@
 package com.anfly.mvp.model;
 
 import com.anfly.mvp.api.ApiService;
+import com.anfly.mvp.base.BaseModel;
+import com.anfly.mvp.base.BaseObserver;
 import com.anfly.mvp.bean.LoginBean;
 import com.anfly.mvp.callback.LoginCallback;
+import com.anfly.mvp.utils.HttpManager;
+import com.anfly.mvp.utils.RxUtil;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -13,28 +17,16 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ImpLoginModel implements LoginModel {
+public class ImpLoginModel extends BaseModel implements LoginModel {
 
     @Override
     public void login(String name, String pwd, LoginCallback loginCallback) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiService.baseLoginUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
-        Observable<LoginBean> login = apiService.login(name, pwd);
-        login.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<LoginBean>() {
+        HttpManager.getHttpManager().getApiService(ApiService.baseLoginUrl, ApiService.class)
+                .login(name, pwd)
+                .compose(RxUtil.rxObservableTransformer())
+                .subscribe(new BaseObserver<LoginBean>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(LoginBean loginBean) {
+                    public void onSuccess(LoginBean loginBean) {
                         int errorCode = loginBean.getErrorCode();
                         if (errorCode == 0) {
                             loginCallback.onSuccess(loginBean);
@@ -44,13 +36,8 @@ public class ImpLoginModel implements LoginModel {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        loginCallback.onFail("登录失败：" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
+                    public void onFail(String error) {
+                        loginCallback.onFail(error);
                     }
                 });
     }
