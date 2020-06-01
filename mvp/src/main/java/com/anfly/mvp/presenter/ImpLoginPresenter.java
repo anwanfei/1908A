@@ -41,5 +41,6 @@ public class ImpLoginPresenter extends BasePresenter implements LoginPresenter, 
     @Override
     protected void initModel() {
         model = new ImpLoginModel();
+        addModel(model);
     }
 }

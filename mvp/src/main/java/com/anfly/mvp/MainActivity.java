@@ -43,6 +43,7 @@ public class MainActivity extends BaseActivity<ImpLoginPresenter, LoginView> imp
         String pwd = etPwd.getText().toString().trim();
         String name = etName.getText().toString().trim();
         mPresenter.login(name, pwd);
+//        toast("点击了登录");
     }
 
     @Override
@@ -53,5 +54,11 @@ public class MainActivity extends BaseActivity<ImpLoginPresenter, LoginView> imp
     @Override
     public void onFail(String error) {
         Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
     }
 }

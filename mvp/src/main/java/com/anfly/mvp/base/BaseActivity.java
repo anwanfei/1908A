@@ -1,9 +1,12 @@
 package com.anfly.mvp.base;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.anfly.mvp.common.MvpApplication;
 
 import butterknife.ButterKnife;
 
@@ -43,4 +46,8 @@ public abstract class BaseActivity<P extends BasePresenter, V extends BaseView> 
     }
 
     protected abstract int getLayoutId();
+
+    public void toast(String msg) {
+        Toast.makeText(MvpApplication.getApp(), msg, Toast.LENGTH_SHORT).show();
+    }
 }
